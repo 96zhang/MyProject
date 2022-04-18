@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace : 用于指定当前的映射文件和哪个接口进行映射-->
+<mapper namespace="com.cy.store.mapper.UserMapper">
+
+    <!--
+         自定义映射规则  id  和resultMap 对于    type: 映射的类
+         column 表中的名称   property 类中属性名称
+         主键是不可省略的，别的只需要配不同的就行
+    -->
+    <resultMap id="UserEntityMap" type="com.cy.store.entity.User">
+        <id column="uid" property="uid"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="created_user" property="createdUser"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="modified_user" property="modifiedUser"/>
+        <result column="modified_time" property="modifiedTime"/>
+    </resultMap>
+
+    <!-- id属性: 表示映射的接口方法的名称
+        useGeneratedKeys="true"  表示开启某个字段的值递增（数据库表中主键设置为递增）
+        keyProperty="uid"  标签表示哪个字段作为逐渐自增
+    -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="uid">
+        INSERT INTO
+            t_user (username, password, salt, phone, email, gender, avatar, is_delete, created_user, created_time, modified_user, modified_time)
+        VALUES
+        (#{username}, #{password}, #{salt}, #{phone}, #{email}, #{gender}, #{avatar}, #{isDelete}, #{createdUser}, #{createdTime}, #{modifiedUser}, #{modifiedTime})
+    </insert>
+
+    <!--
+         resultType  :表示查询的结果集类型，只需要指定对应的类型，resultType="com.cy.store.entity.User"
+         resultMap   :当表的资源和类对象属性字段不一致时，来自定义结果集的映射规则
+    -->
+    <select id="findByUsername" resultMap="UserEntityMap" >
+        SELECT * FROM t_user WHERE username = #{username}
+    </select>
+
+</mapper>
